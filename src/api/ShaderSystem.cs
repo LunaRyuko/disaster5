@@ -15,16 +15,16 @@ namespace DisasterAPI
         }
 
         [JSFunction(Name = "RegisterShader")]
-        public static void RegisterShader(string Name, FunctionInstance InitFunc, FunctionInstance FallbackFunc, FunctionInstance DrawFunc)
+        public static void RegisterShaderJS(string Name, FunctionInstance InitFunc, FunctionInstance FallbackFunc, FunctionInstance DrawFunc)
         {
             throw new NotImplementedException();
             //Disaster.ShaderSystem.RegisterShaderJS(Name, InitFunc, FallbackFunc, DrawFunc);
         }
 
         [JSFunction(Name = "RegisterBasicShader")]
-        public static void RegisterBasicShader(string Name, string VertexShaderPath, string PixelShaderPath)
+        public static void RegisterBasicShaderJS(string Name, string VertexShaderPath, string PixelShaderPath)
         {
-            Disaster.ShaderSystem.RegisterBasicShaderJS(Name, VertexShaderPath, PixelShaderPath);
+            Disaster.ShaderSystem.RegisterBasicShader(Name, VertexShaderPath, PixelShaderPath);
         }
     }
 }
