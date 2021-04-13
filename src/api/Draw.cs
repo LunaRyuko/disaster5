@@ -2,6 +2,7 @@ using OpenGL;
 using Jurassic;
 using Jurassic.Library;
 using System.Numerics;
+
 namespace DisasterAPI
 {
     
@@ -25,6 +26,40 @@ namespace DisasterAPI
         [JSProperty(Name = "fontWidth")] public static int fontWidth { get { return Disaster.Draw.fontWidth; } }
         [JSProperty(Name = "screenWidth")] public static int screenWidth { get { return Disaster.ScreenController.screenWidth; } }
         [JSProperty(Name = "screenHeight")] public static int screenHeight { get { return Disaster.ScreenController.screenHeight; } }
+        
+        [JSFunction(Name = "setFog")]
+        public static void SetFog(ObjectInstance color, double fogStart, double fogDistance)
+        {
+            var clr = Disaster.TypeInterface.Color32(color);
+            Disaster.ObjRenderer.SetFogProperties(clr, (float)fogStart, (float)fogDistance);
+        }
+        
+        [JSFunction(Name = "enableFog")]
+        public static void EnableFog()
+        {
+            Disaster.ObjRenderer.SetFogEnabled(true);
+        }
+        
+        [JSFunction(Name = "disableFog")]
+        public static void DisableFog()
+        {
+            Disaster.ObjRenderer.SetFogEnabled(false);
+        }
+        
+        [JSFunction(Name = "setClearColor")]
+        public static void SetClearColor(ObjectInstance color, double fogStart, double fogDistance)
+        {
+            var clr = Disaster.TypeInterface.Color32(color);
+            Disaster.ScreenController.SetClearColor(clr);
+        }
+
+        [JSFunction(Name = "offset")]
+        public static void Offset(int x, int y)
+        {
+            Disaster.Draw.offsetX = x;
+            Disaster.Draw.offsetY = y;
+        }
+
 
         [JSFunction(Name = "strokeRect")]
         public static void StrokeRect(int x, int y, int width, int height, ObjectInstance color)
@@ -70,14 +105,34 @@ namespace DisasterAPI
         public static void Texture(int x, int y, string texturePath)
         {
             var pixelBuffer = Disaster.Assets.PixelBuffer(texturePath);
-            Disaster.Draw.PixelBuffer(pixelBuffer, x, y);
+            Disaster.Draw.PixelBuffer(pixelBuffer, x, y, Disaster.Transform2D.identity);
+        }
+
+        [JSFunction(Name = "textureTransformed")]
+        public static void TextureTransformed(int x, int y, ObjectInstance transformation, string texturePath)
+        {
+            var trans = Disaster.TypeInterface.Transform2d(transformation);
+            var pixelBuffer = Disaster.Assets.PixelBuffer(texturePath);
+            Disaster.Draw.PixelBuffer(pixelBuffer, x, y, trans);
         }
 
         [JSFunction(Name = "texturePart")]
-        public static void TexturePart(int x, int y, int sx, int sy, int sw, int sh, string texturePath)
+        public static void TexturePart(int x, int y, ObjectInstance rectangle, string texturePath)
         {
+            var rect = Disaster.TypeInterface.Rect(rectangle);
+
             var pixelBuffer = Disaster.Assets.PixelBuffer(texturePath);
-            Disaster.Draw.PixelBuffer(pixelBuffer, x, y, sx, sy, sw, sh);
+            Disaster.Draw.PixelBuffer(pixelBuffer, x, y, rect, Disaster.Transform2D.identity);
+        }
+
+        [JSFunction(Name = "texturePartTransformed")]
+        public static void TexturePartTransformed(int x, int y, ObjectInstance rectangle, ObjectInstance transformation, string texturePath)
+        {
+            var rect = Disaster.TypeInterface.Rect(rectangle);
+            var trans = Disaster.TypeInterface.Transform2d(transformation);
+
+            var pixelBuffer = Disaster.Assets.PixelBuffer(texturePath);
+            Disaster.Draw.PixelBuffer(pixelBuffer, x, y, rect, trans);
         }
 
         //public void TexturePart() {}
